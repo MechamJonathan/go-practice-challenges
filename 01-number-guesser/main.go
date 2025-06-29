@@ -7,51 +7,47 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Welcome to Number Guesser!")
 	fmt.Println(("-------------------------"))
-	fmt.Println("> I've picked a random number (1-100). Guess it.")
 
-	num := generateRandomNumber()
+	reader := bufio.NewReader(os.Stdin)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	for {
-		fmt.Print("-> ")
-		input, _ := reader.ReadString('\n')
+		target := r.Intn(100) + 1
+		fmt.Println("> I've picked a random number (1-100). Guess it.")
 
-		input = strings.Replace(input, "\n", "", -1)
-		i, err := strconv.Atoi(input)
-		if err != nil {
-			fmt.Println("Invalid Input: ", err)
-		}
-
-		if i < num {
-			fmt.Println("higher")
-		} else if i > num {
-			fmt.Println("lower")
-		} else {
-			fmt.Println("Nice... you guessed it correctly.")
-			fmt.Println("Want to play again? Y/N")
+		for {
 			fmt.Print("-> ")
+			input := readInput(reader)
 
-			input, _ := reader.ReadString('\n')
-			input = strings.Replace(input, "\n", "", -1)
+			users_guess, err := strconv.Atoi(input)
+			if err != nil {
+				fmt.Println("Invalid Input: ", err)
+			}
 
-			if input == "Y" {
-				num = generateRandomNumber()
-				fmt.Println("I picked a new number...")
-				continue
+			if users_guess < target {
+				fmt.Println("higher")
+			} else if users_guess > target {
+				fmt.Println("lower")
 			} else {
-				fmt.Println("see ya!")
+				fmt.Println("Nice... You guessed it correctly.")
 				break
 			}
+		}
+
+		fmt.Println("Want to play again? Y/N")
+		if strings.ToUpper(readInput(reader)) != "Y" {
+			break
 		}
 	}
 }
 
-func generateRandomNumber() int {
-	num := rand.Intn(100)
-	return num
+func readInput(reader *bufio.Reader) string {
+	input, _ := reader.ReadString('\n')
+	return strings.TrimSpace(input)
 }
