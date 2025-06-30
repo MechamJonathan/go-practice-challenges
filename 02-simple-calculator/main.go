@@ -15,23 +15,29 @@ func main() {
 	for {
 		fmt.Println("Enter first digit:")
 		fmt.Print("-> ")
-		first_digit, err := strconv.Atoi(readInput(reader))
+		first_digit, err := readIntInput(reader)
 		if err != nil {
-			fmt.Println("invalid input")
+			fmt.Println("invalid input! Please enter a valid number.")
+			continue
 		}
 
-		fmt.Println("Enter operator:")
+		fmt.Println("Enter operator (+, -, *, /):")
 		fmt.Print("-> ")
 		operator := readInput(reader)
 
 		fmt.Println("Enter second digit:")
 		fmt.Print("-> ")
-		second_digit, err := strconv.Atoi(readInput(reader))
+		second_digit, err := readIntInput(reader)
 		if err != nil {
-			fmt.Println("invalid input")
+			fmt.Println("invalid input! Please enter a valid number.")
 		}
 
-		fmt.Println("Result: ", calculateResult(first_digit, operator, second_digit))
+		result, err := calculateResult(first_digit, operator, second_digit)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+
+		fmt.Printf("Result: %d \n", result)
 	}
 }
 
@@ -40,17 +46,25 @@ func readInput(reader *bufio.Reader) string {
 	return strings.TrimSpace(input)
 }
 
-func calculateResult(fd int, op string, sd int) int {
-	result := 0
+func readIntInput(reader *bufio.Reader) (int, error) {
+	input := readInput(reader)
+	return strconv.Atoi(input)
+}
+
+func calculateResult(fd int, op string, sd int) (int, error) {
 	switch op {
 	case "+":
-		result = fd + sd
+		return fd + sd, nil
 	case "-":
-		result = fd - sd
+		return fd - sd, nil
 	case "*":
-		result = fd * sd
+		return fd * sd, nil
 	case "/":
-		result = fd / sd
+		if sd == 0 {
+			return 0, fmt.Errorf("cannot divide by zero")
+		}
+		return fd / sd, nil
+	default:
+		return 0, fmt.Errorf("unsupported operator: %s", op)
 	}
-	return result
 }
