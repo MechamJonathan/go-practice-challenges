@@ -67,4 +67,5 @@ func calculateResult(fd int, op string, sd int) (int, error) {
 	default:
 		return 0, fmt.Errorf("unsupported operator: %s", op)
 	}
+
 }
