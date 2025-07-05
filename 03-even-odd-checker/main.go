@@ -26,7 +26,6 @@ func main() {
 		} else {
 			fmt.Println("Odd!")
 		}
-
 	}
 
 }
