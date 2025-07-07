@@ -27,7 +27,6 @@ func main() {
 			fmt.Println("Odd!")
 		}
 	}
-
 }
 
 func readInput(reader *bufio.Reader) (int, error) {
