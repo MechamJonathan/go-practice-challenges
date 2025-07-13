@@ -1,0 +1,5 @@
+package multiplicationtable
+
+func main() {
+
+}
